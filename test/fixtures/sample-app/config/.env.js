@@ -1,3 +1,3 @@
 module.exports = {
-    a: 'one'
+    a_sample: 'one'
 };

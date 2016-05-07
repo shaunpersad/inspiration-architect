@@ -2,9 +2,9 @@
 
 module.exports = function addSomething(app, done) {
 
-    app.something = function() {
+    app.doSomething = function() {
 
-        return 'hello';
+        return 2;
     };
     done();
 };

@@ -4,10 +4,10 @@ module.exports = function addSomethingAsync(app, done) {
 
     setTimeout(function() {
         
-        app.something = function() {
-            return 'goodbye';
+        app.doSomethingAsync = function() {
+            return 1;
         };
         done();
-    }, 1000);
+    }, 100);
 };
 

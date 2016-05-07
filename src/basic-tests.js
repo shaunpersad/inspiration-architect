@@ -1,15 +1,8 @@
-"use strict";
+var should = require('should');
+var _get = require('lodash/get');
+var _set = require('lodash/set');
+var inspirationArchitectFactory = require('../src/factory');
 
-if (!inspirationArchitectFactory) {
-    var inspirationArchitectFactory = require('../src/factory');
-}
-if (!should) {
-    var should = require('should');
-}
-
-if (!_) {
-    var _ = require('lodash');
-}
 
 function basicTests(Inspiration) {
 
@@ -26,7 +19,7 @@ function basicTests(Inspiration) {
                 if (err) {
                     throw err;
                 }
-                should(_.get(inspiration.app, app_config_path)).not.equal(undefined);
+                should(_get(inspiration.app, app_config_path)).not.equal(undefined);
                 done();
             });
         });
@@ -50,7 +43,7 @@ function basicTests(Inspiration) {
                 if (err) {
                     throw err;
                 }
-                should(_.get(inspiration.app, app_config_path)).not.equal(undefined);
+                should(_get(inspiration.app, app_config_path)).not.equal(undefined);
                 done();
             });
         });
@@ -76,9 +69,9 @@ function basicTests(Inspiration) {
                     throw err;
                 }
 
-                should(_.get(inspiration.app, app_config_path)).not.equal(undefined);
-                _.get(inspiration.app, app_config_path)('a').should.equal(config.a);
-                _.get(inspiration.app, app_config_path)('b.c').should.equal(config.b.c);
+                should(_get(inspiration.app, app_config_path)).not.equal(undefined);
+                _get(inspiration.app, app_config_path)('a').should.equal(config.a);
+                _get(inspiration.app, app_config_path)('b.c').should.equal(config.b.c);
                 done();
             });
         });
@@ -108,9 +101,9 @@ function basicTests(Inspiration) {
                 }
                 inspiration.app.should.equal(app);
                 inspiration.app.should.have.property('name', app.name);
-                should(_.get(inspiration.app, app_config_path)).not.equal(undefined);
-                _.get(inspiration.app, app_config_path)('a').should.equal(config.a);
-                _.get(inspiration.app, app_config_path)('b.c').should.equal(config.b.c);
+                should(_get(inspiration.app, app_config_path)).not.equal(undefined);
+                _get(inspiration.app, app_config_path)('a').should.equal(config.a);
+                _get(inspiration.app, app_config_path)('b.c').should.equal(config.b.c);
 
                 done();
             });
@@ -169,7 +162,7 @@ function basicTests(Inspiration) {
                 c: 'aloha'
             }
         };
-        _.set(config, Inspiration.factory_config.config_providers_path, [
+        _set(config, Inspiration.factory_config.config_providers_path, [
             function(app, done) {
                 app.somethingElse = function() {
 
@@ -209,9 +202,9 @@ function basicTests(Inspiration) {
                 }
                 inspiration.app.should.equal(app);
                 inspiration.app.should.have.property('name', app.name);
-                should(_.get(inspiration.app, app_config_path)).not.equal(undefined);
-                _.get(inspiration.app, app_config_path)('a').should.equal(config.a);
-                _.get(inspiration.app, app_config_path)('b.c').should.equal(config.b.c);
+                should(_get(inspiration.app, app_config_path)).not.equal(undefined);
+                _get(inspiration.app, app_config_path)('a').should.equal(config.a);
+                _get(inspiration.app, app_config_path)('b.c').should.equal(config.b.c);
                 inspiration.app.should.have.property('something');
                 inspiration.app.something().should.equal(1);
                 inspiration.app.should.have.property('somethingAsync');
@@ -258,7 +251,7 @@ describe('factory', function() {
                         throw err;
                     }
 
-                    should(_.get(inspiration.app, factory_config.app_config_path)).not.equal(undefined);
+                    should(_get(inspiration.app, factory_config.app_config_path)).not.equal(undefined);
                     inspiration.app.locals.config('greeting').should.equal('hello');
                     done();
                 });
@@ -281,7 +274,7 @@ describe('factory', function() {
             it('should be able to use custom.providers as the config path to get providers', function(done) {
 
                 var config = {};
-                _.set(config, 'custom.providers', [
+                _set(config, 'custom.providers', [
                     function(app, done) {
                         app.something = function() {
                             return 'hello';
@@ -307,3 +300,4 @@ describe('factory', function() {
         });
     });
 });
+module.exports = basicTests;

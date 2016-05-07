@@ -1,14 +1,14 @@
 module.exports = {
-    a: 1,
-    b: 'two',
-    c: [
+    a_sample: 1,
+    b_sample: 'two',
+    c_sample: [
         true, {
-            d: 4
+            d_sample: 4
         }
     ],
-    e: {
-        f: {
-            g: 5
+    e_sample: {
+        f_sample: {
+            g_sample: 5
         }
     }
 };

@@ -1,3 +1,4 @@
 module.exports = {
-    h: 'hello'
+    h_sample: 'hello',
+    i_sample: 'goodbye'
 };

@@ -6,11 +6,13 @@ var _isFunction = require('lodash/isFunction');
 var _get = require('lodash/get');
 var _set = require('lodash/set');
 var _defaultsDeep = require('lodash/defaultsDeep');
+var _trimRight = require('lodash/trimEnd');
 
 module.exports = function inspirationArchitectFactory(factory_config) {
 
     var default_factory_config = {
         config_files: {},
+        config_files_use_ext: '.js',
         app_config_path: 'config',
         config_env_filename: '.env',
         config_app_filename: 'app',
@@ -80,22 +82,27 @@ module.exports = function inspirationArchitectFactory(factory_config) {
             var app_config = {};
 
             for (var file in config_files) {
-                if (file.indexOf('.') !== 0 || file == factory_config.config_env_filename) {
+
+                if (factory_config.config_files_use_ext) {
+                    var key = _trimRight(file, factory_config.config_files_use_ext);
+                }
+
+                if (key.indexOf('.') !== 0 || key == factory_config.config_env_filename) {
 
                     var value = config_files[file];
 
-                    if (file == factory_config.config_env_filename) {
+                    if (key == factory_config.config_env_filename) {
                         env_config = value;
-                    } else if (file == factory_config.config_app_filename) {
+                    } else if (key == factory_config.config_app_filename) {
                         app_config = value;
                     } else {
-                        addtl_config[file] = value;
+                        addtl_config[key] = value;
                     }
                 }
             }
 
             var _config = _defaultsDeep({}, this.config, env_config, app_config, addtl_config);
-            //console.log(_config);
+
             _set(this.app, factory_config.app_config_path, (path, default_value) => {
                 return _get(_config, path, default_value);
             });
@@ -175,7 +182,7 @@ module.exports = function inspirationArchitectFactory(factory_config) {
             var next = (err) => {
 
                 if (err || index === fns.length) {
-                    return callback(err);
+                    return callback(err, this.app);
                 }
 
                 var fn = fns[index++];

@@ -18,11 +18,27 @@ gulp.task('browserify', function() {
         .pipe(buffer())
         .pipe(uglify())
         .pipe(gulp.dest('./'));
+});
 
+gulp.task('basicTests', function() {
+
+    browserify({
+        entries: './src/basic-tests.js',
+        debug: true,
+        standalone: 'basicTests'
+    })
+        .transform(babelify, {presets: ['es2015']})
+        .bundle()
+        .pipe(source('basic-tests.min.js'))
+        .pipe(buffer())
+        .pipe(uglify())
+        .pipe(gulp.dest('./test'));
 });
 
 gulp.task('watch', function() {
     gulp.watch('./src/factory.js', ['browserify']);
+    gulp.watch('./src/basic-tests.js', ['basicTests']);
+
 });
 
-gulp.task('default', ['browserify', 'watch']);
+gulp.task('default', ['browserify', 'basicTests', 'watch']);
