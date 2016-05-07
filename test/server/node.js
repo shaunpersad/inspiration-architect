@@ -1,6 +1,6 @@
 "use strict";
 
-var inspirationArchitectFactory = require('../src/factory');
+var inspirationArchitectFactory = require('../../src/factory');
 
 var should = require('should');
 
@@ -8,23 +8,26 @@ var _ = require('lodash');
 
 var path = require('path');
 
-var basicTests = require('./basic-tests.min');
+var globalTests = require('../../test-src/global-tests');
+var factoryTests = require('../../test-src/factory-tests');
+
+factoryTests();
 
 describe('server tests', function() {
     
     describe('different config files', function() {
 
-        var config_path = path.join(__dirname, 'fixtures', 'sample-app', 'config');
+        var config_files = path.join(__dirname, '/../fixtures', 'sample-app', 'config');
 
         var factory_config = {
-            config_files: config_path
+            config_files: config_files
         };
 
         var Inspiration = inspirationArchitectFactory(factory_config);
 
         it('should run the basic tests', function() {
 
-            basicTests(Inspiration);
+            globalTests(Inspiration);
         });
 
         it('should honor the server config files', function(done) {
@@ -74,17 +77,17 @@ describe('server tests', function() {
 
     describe('no config files', function() {
 
-        var config_path = path.join(__dirname, 'fixtures', 'empty');
+        var config_files = path.join(__dirname, '/../fixtures', 'empty');
 
         var factory_config = {
-            config_files: config_path
+            config_files: config_files
         };
 
         var Inspiration = inspirationArchitectFactory(factory_config);
 
         it('should run the basic tests', function() {
 
-            basicTests(Inspiration);
+            globalTests(Inspiration);
         });
 
         it('should be able to overwrite empty server config files', function(done) {
@@ -115,10 +118,10 @@ describe('server tests', function() {
 
     describe('reference server providers', function() {
 
-        var providers_path = path.join(__dirname, 'fixtures', 'sample-app', 'providers');
+        var provider_files= path.join(__dirname, '/../fixtures', 'sample-app', 'providers');
 
         var factory_config = {
-            provider_files: providers_path
+            provider_files: provider_files
         };
 
         var Inspiration = inspirationArchitectFactory(factory_config);
@@ -159,17 +162,17 @@ describe('server tests', function() {
     
     describe('no provider files', function() {
 
-        var provider_path = path.join(__dirname, 'fixtures', 'empty');
+        var provider_files = path.join(__dirname, '/../fixtures', 'empty');
 
         var factory_config = {
-            provider_files: provider_path
+            provider_files: provider_files
         };
 
         var Inspiration = inspirationArchitectFactory(factory_config);
 
         it('should run the basic tests', function() {
 
-            basicTests(Inspiration);
+            globalTests(Inspiration);
         });
         
         it('should still run initial providers', function(done) {
@@ -217,7 +220,7 @@ describe('server tests', function() {
         var config_app_filename = 'application';
         var config_providers_path = 'these.are.my.providers';
         var app_config_path = 'locals.config';
-        var providers_path = path.join(__dirname, 'fixtures', 'sample-app', 'providers');
+        var provider_files = path.join(__dirname, '/../fixtures', 'sample-app', 'providers');
 
         var factory_config = {
             config_files: {},
@@ -225,7 +228,7 @@ describe('server tests', function() {
             config_app_filename: config_app_filename,
             config_providers_path: config_providers_path,
             app_config_path: app_config_path,
-            provider_files: providers_path
+            provider_files: provider_files
         };
         factory_config.config_files[config_env_filename] = {
             greeting: 'aloha'

@@ -4,8 +4,10 @@ var babelify = require('babelify');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var uglify = require('gulp-uglify');
+var globify = require('require-globify');
 
-gulp.task('browserify', function() {
+
+gulp.task('factory', function() {
 
     browserify({
         entries: './src/factory.js',
@@ -20,25 +22,24 @@ gulp.task('browserify', function() {
         .pipe(gulp.dest('./'));
 });
 
-gulp.task('basicTests', function() {
+gulp.task('browserify', function() {
 
     browserify({
-        entries: './src/basic-tests.js',
+        entries: './test-src/browserify.js',
         debug: true,
-        standalone: 'basicTests'
+        standalone: 'browserify'
     })
         .transform(babelify, {presets: ['es2015']})
+        .transform(globify)
         .bundle()
-        .pipe(source('basic-tests.min.js'))
-        .pipe(buffer())
-        .pipe(uglify())
-        .pipe(gulp.dest('./test'));
+        .pipe(source('browserify.js'))
+        .pipe(gulp.dest('./test/browser'));
 });
 
 gulp.task('watch', function() {
-    gulp.watch('./src/factory.js', ['browserify']);
-    gulp.watch('./src/basic-tests.js', ['basicTests']);
+    gulp.watch('./src/factory.js', ['factory']);
+    gulp.watch('./test-src/browserify.js', ['browserify']);
 
 });
 
-gulp.task('default', ['browserify', 'basicTests', 'watch']);
+gulp.task('default', ['factory', 'browserify', 'watch']);
