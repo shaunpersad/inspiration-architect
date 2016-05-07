@@ -87,17 +87,14 @@ module.exports = function inspirationArchitectFactory(factory_config) {
                     var key = _trimRight(file, factory_config.config_files_use_ext);
                 }
 
-                if (key.indexOf('.') !== 0 || key == factory_config.config_env_filename) {
+                var value = config_files[file];
 
-                    var value = config_files[file];
-
-                    if (key == factory_config.config_env_filename) {
-                        env_config = value;
-                    } else if (key == factory_config.config_app_filename) {
-                        app_config = value;
-                    } else {
-                        addtl_config[key] = value;
-                    }
+                if (key === factory_config.config_env_filename) {
+                    env_config = value;
+                } else if (key === factory_config.config_app_filename) {
+                    app_config = value;
+                } else {
+                    addtl_config[key] = value;
                 }
             }
 

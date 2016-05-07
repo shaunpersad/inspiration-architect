@@ -211,4 +211,53 @@ describe('server tests', function() {
         });
     });
     
+    describe('different factory config values combined', function() {
+
+        var config_env_filename = 'local';
+        var config_app_filename = 'application';
+        var config_providers_path = 'these.are.my.providers';
+        var app_config_path = 'locals.config';
+        var providers_path = path.join(__dirname, 'fixtures', 'sample-app', 'providers');
+
+        var factory_config = {
+            config_files: {},
+            config_env_filename: config_env_filename,
+            config_app_filename: config_app_filename,
+            config_providers_path: config_providers_path,
+            app_config_path: app_config_path,
+            provider_files: providers_path
+        };
+        factory_config.config_files[config_env_filename] = {
+            greeting: 'aloha'
+        };
+        factory_config.config_files[config_app_filename] = {
+            greeting: 'hello',
+            parting: 'goodbye'
+        };
+        _.set(factory_config.config_files[config_app_filename], config_providers_path, [
+            'addSomething'
+        ]);
+
+        var Inspiration = inspirationArchitectFactory(factory_config);
+        
+        it('should honor the factory config', function(done) {
+            
+            var inspiration = new Inspiration();
+            inspiration.test = true;
+            inspiration.init(function(err) {
+                
+                if (err) {
+                    throw err;
+                }
+                
+                var config = _.get(inspiration.app, app_config_path);
+                should(config('greeting')).equal('aloha');
+                should(config('parting')).equal('goodbye');
+                inspiration.app.doSomething().should.equal(2);
+                done();
+            });
+        });
+        
+    });
+    
 });
