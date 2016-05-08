@@ -167,6 +167,10 @@ module.exports = function inspirationArchitectFactory(factory_config) {
 
         
         init(callback) {
+            
+            if (!callback) {
+                callback = function(err) {};
+            }
 
             var fns = [
                 (next) => {
