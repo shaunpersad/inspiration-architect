@@ -11,7 +11,7 @@ var path = require('path');
 var globalTests = require('../../test-src/global-tests');
 var factoryTests = require('../../test-src/factory-tests');
 
-factoryTests();
+factoryTests(inspirationArchitectFactory);
 
 describe('server tests', function() {
     

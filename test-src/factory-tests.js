@@ -4,9 +4,8 @@ var should = require('should');
 var _get = require('lodash/get');
 var _set = require('lodash/set');
 var globalTests = require('./global-tests');
-var inspirationArchitectFactory = require('../src/factory');
 
-module.exports = function factoryTests() {
+module.exports = function factoryTests(inspirationArchitectFactory) {
     describe('factory', function() {
 
         describe('empty factory config', function() {

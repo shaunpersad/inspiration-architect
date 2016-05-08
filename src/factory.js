@@ -122,7 +122,9 @@ module.exports = function inspirationArchitectFactory(factory_config) {
             } else if (_isPlainObject(factory_config.provider_files)) {
 
                 loadProvider = (provider) => {
-                    return factory_config.provider_files[provider];
+                    return factory_config.provider_files[provider] ||
+                           factory_config.provider_files[_trimRight(provider, '.js')] ||
+                           factory_config.provider_files[`${provider}.js`];
                 };
             }
 
@@ -145,6 +147,7 @@ module.exports = function inspirationArchitectFactory(factory_config) {
                 }
 
                 if (!_isFunction(provider)) {
+                    console.log(factory_config.provider_files);
                     return next(new Error(`Provider ${index} is not a function.`));
                 }
 

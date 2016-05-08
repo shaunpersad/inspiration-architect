@@ -4,7 +4,8 @@
   "description": "The thin foundation layer for building applications.",
   "main": "src/factory.js",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha --recursive"
+    "test": "./node_modules/mocha/bin/mocha --recursive --reporter nyan",
+    "compile_webpack_test": "webpack ./test-src/webpack.js ./test/browser/webpack.js"
   },
   "repository": {
     "type": "git",

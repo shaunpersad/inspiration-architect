@@ -10,17 +10,27 @@ var _set = require('lodash/set');
 var globalTests = require('./global-tests');
 var factoryTests = require('./factory-tests');
 
-var config_files = require('../test/fixtures/sample-app/config/*.js', {mode: 'hash', options: {dot: true}});
-var empty_config_files = require('../test/fixtures/empty/*.js', {mode: 'hash'});
-var provider_files = require('../test/fixtures/sample-app/providers/*.js', {mode: 'hash'});
-var empty_provider_files = require('../test/fixtures/empty/*.js', {mode: 'hash'});
+function requireAll(r) {
+
+    var hash = {};
+    r.keys().forEach(function(key) {
+        var pieces = key.split('/');
+        hash[pieces[pieces.length - 1]] = r(key);
+    });
+    return hash;
+}
+var config_files = requireAll(require.context('../test/fixtures/sample-app/config/', true, /\.js$/));
+config_files['.env'] = require('../test/fixtures/sample-app/config/.env');
+var empty_config_files = requireAll(require.context('../test/fixtures/empty/', true, /\.js$/));
+var provider_files = requireAll(require.context('../test/fixtures/sample-app/providers/', true, /\.js$/));
+var empty_provider_files = requireAll(require.context('../test/fixtures/empty/', true, /\.js$/));
 
 factoryTests(inspirationArchitectFactory);
 
-describe('browserify tests', function() {
+describe('webpack tests', function() {
 
     describe('different config files', function() {
-        
+
         var factory_config = {
             config_files: config_files
         };
@@ -78,7 +88,7 @@ describe('browserify tests', function() {
     });
 
     describe('no config files', function() {
-        
+
         var factory_config = {
             config_files: empty_config_files
         };
@@ -117,7 +127,7 @@ describe('browserify tests', function() {
     });
 
     describe('reference server providers', function() {
-        
+
         var factory_config = {
             provider_files: provider_files
         };
@@ -159,7 +169,7 @@ describe('browserify tests', function() {
     });
 
     describe('no provider files', function() {
-        
+
         var factory_config = {
             provider_files: empty_provider_files
         };
@@ -259,4 +269,5 @@ describe('browserify tests', function() {
     });
 
 });
+
 
