@@ -16,7 +16,7 @@ Several of these technologies utilize an "app" object or concept of some sort.
 The goal of this library is not to supplant any of these existing technologies, but
 rather to provide a consistent foundation compatible with any app.
 
-To accomplish this, it is necessary to get to the root of what any and all apps should minimally contain:
+To accomplish this, it is necessary to get to the root of what any and all apps should minimally contain: 
 1. a variable configuration
 2. a series of procedures run in order
 
