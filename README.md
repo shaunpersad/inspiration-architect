@@ -30,6 +30,10 @@ then displays the data in different types of React components.  Here, the series
 network call wrapper functions/classes for each vendor's API then mounting the appropriate React component,
 while the variable configuration could include the different API base URLs.
 
+### Installation
+If in node.js, run `npm install inspiration-architect` and `require` it,
+or if in the browser and not using a build process, include `inspiration-architect.min.js` in a script tag.
+
 ### Usage
 The basis of using this package is to pass an app object (e.g. an `express()` app object, or by default, an empty JavaScript object) 
 through a series of functions (called providers) to operate on the `app`, or simply to run bootstrap/setup code.
