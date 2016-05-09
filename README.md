@@ -32,11 +32,62 @@ while the variable configuration could include the different API base URLs.
 ### Usage
 The basis of using this package is to pass an app object (e.g. an `express()` app object, or by default, an empty JavaScript object) 
 through a series of functions (called providers) to operate on the `app`, or simply to run bootstrap/setup code.
+
+What goes in a provider function? Anything that can logically be separated out.  
+For example, you could have a provider that sets up a database connection:
+```
+var mongoose = require('mongoose');
+
+module.exports = function mongoProvider(app, done) {
+
+    var uri = app.config('database.mongo.uri');
+    var options = app.config('database.mongo.options');
+
+    mongoose.connect(uri, options);
+
+    app.db = mongoose.connection;
+
+    app.db.on('error', function(err) {
+
+        done(err);
+    });
+    app.db.once('open', function () {
+        // yay!
+        console.log('MongoDB connection open.');
+        done();
+    });
+};
+```
+And one that sets up caching:
+```
+var redis = require('redis');
+
+module.exports = function redisProvider(app, done) {
+
+    var port = app.config('cache.redis.port');
+    var host = app.config('cache.redis.host');
+    var options = app.config('cache.redis.options');
+
+    app.redis = redis.createClient(port, host, options);
+
+    app.redis.on('error', function(err) {
+
+        done(err);
+    });
+
+    app.redis.on('ready', function () {
+        // yay!
+        console.log('Redis connection ready.');
+        done();
+    });
+};
+```
+
 Throughout this entire process, there will be a config function available to allow you to access your config values.
 By default, this function is appended to the `app` object via `app.config(path[, default_value])`.
 
 #### Example
-Assume the following Express.js app:
+Assume the following (very simple) Express.js app:
 
 ```
 project/
@@ -123,7 +174,6 @@ architect.init(function(err, app) {
 });
 ```
 Then, from the `project/` directory, running `node start` will kick things off.
-
 
 #### Process
 The process for use includes:
@@ -317,6 +367,71 @@ architect.init(function(err, app) {
     });
 });
 ```
+#### Client-side Examples
 
+The main difference between using this library client-side vs. server-side is that the browser cannot read files from the filesystem,
+so you must provide it with a way to do so as part of your build process.  
 
+##### Via Browserify
+Here's an example of how to do so via Browserify + 
+[react-globify](https://github.com/capaj/require-globify). Compare the Express.js example's `start.js` file to this:
+```
+var inspirationArchitectFactory = require('inspiration-architect');
 
+var config_files = require('./config/*.js', {mode: 'hash', options: {dot: true}});
+var provider_files = require('./providers/*.js', {mode: 'hash'});
+
+var factory_config = {
+    config_files: config_files,
+    provider_files: provider_files
+};
+
+var InspirationArchitect = inspirationArchitectFactory(factory_config);
+
+var architect = new InspirationArchitect();
+architect.init(function(err, app) {
+
+    console.log('This is running on the browser!');
+});
+```
+You'd then point Browserify to this entry point file to generate your bundle file to include in your script tag.
+
+##### Via Webpack
+Without any external packages, you can get access to your files like so:
+```
+var inspirationArchitectFactory = require('../inspiration-architect.min');
+
+function requireAll(r) {
+
+    var hash = {};
+    r.keys().forEach(function(key) {
+        var pieces = key.split('/');
+        hash[pieces[pieces.length - 1]] = r(key);
+    });
+    return hash;
+}
+
+var config_files = requireAll(require.context('./config/', true, /\.js$/));
+config_files['.env'] = require('./config/.env');
+var provider_files = requireAll(require.context('./providers/', true, /\.js$/));
+
+var factory_config = {
+    config_files: config_files,
+    provider_files: provider_files
+};
+
+var InspirationArchitect = inspirationArchitectFactory(factory_config);
+
+var architect = new InspirationArchitect();
+architect.init(function(err, app) {
+
+    console.log('This is running on the browser!');
+});
+```
+Notice that in the above example, we're using `inspiration-architect.min.js`, 
+since Webpack does not polyfill the `fs` module by default, which is already polyfilled in the minified version of this library.
+
+### Tests
+Run `npm test` to run all tests. 
+You may also individually run the Browserify and Webpack tests individually in the browser by opening the
+`test/browser/browserify.html` and `test/browser/webpack.html` files in your browser.
