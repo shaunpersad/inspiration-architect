@@ -17,6 +17,7 @@ The goal of this library is not to supplant any of these existing technologies, 
 rather to provide a consistent foundation compatible with any app.
 
 To accomplish this, it is necessary to get to the root of what any and all apps should minimally contain: 
+
 1. a variable configuration
 2. a series of procedures run in order
 
@@ -177,6 +178,7 @@ Then, from the `project/` directory, running `node start` will kick things off.
 
 #### Process
 The process for use includes:
+
 1. set up the configs
 2. set up the providers
 3. set up an entry point file, and import the factory function
