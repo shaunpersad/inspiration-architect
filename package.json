@@ -1,7 +1,7 @@
 {
   "name": "inspiration-architect",
   "version": "0.0.1",
-  "description": "The thin foundation layer for building applications.",
+  "description": "A thin foundation layer for building applications.",
   "main": "src/factory.js",
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha --recursive --reporter nyan",
