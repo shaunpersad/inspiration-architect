@@ -1,7 +1,7 @@
 # inspiration-architect
 A thin foundation layer for building applications.
 
-This library provides you with the tools to set up logical configs for your app, 
+This library provides you with the tools to set up configs for your app, 
 and define the series of procedures (called "providers") that should run in order.
 This simplistic approach provides the basis for thin, logical, flexible organization of your app.
 
