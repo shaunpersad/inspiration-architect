@@ -1,6 +1,6 @@
 {
   "name": "inspiration-architect",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A thin foundation layer for building applications.",
   "main": "src/factory.js",
   "scripts": {
