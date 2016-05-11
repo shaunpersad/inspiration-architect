@@ -108,7 +108,7 @@ project/
 ##### project/config/app.js:
 ```
 module.exports = {
-    controller_directory: __dirname+'/../controllers/'
+    controller_directory: __dirname+'/../controllers/',
     port: 1337,
     providers: [
         'controllersProvider',
@@ -156,8 +156,8 @@ var express = require('express');
 var app = express();
 
 var factory_config = {
-    config_files: __dirname+'/../config',
-    provider_files: __dirname+'/../providers'
+    config_files: './config',
+    provider_files: './providers'
 };
 
 var InspirationArchitect = inspirationArchitectFactory(factory_config);
@@ -404,7 +404,29 @@ architect.init(function(err, app) {
     console.log('This is running on the browser!');
 });
 ```
-You'd then point Browserify to this entry point file to generate your bundle file to include in your script tag.
+You'd then point Browserify to this entry point file to generate your bundle file to include in your script tag:
+```
+var gulp = require('gulp');
+var browserify = require('browserify');
+var babelify = require('babelify');
+var source = require('vinyl-source-stream');
+var globify = require('require-globify');
+
+gulp.task('browserify', function() {
+
+    browserify({
+        entries: './start.js',
+        debug: true,
+        standalone: 'browserify'
+    })
+    .transform(babelify, {presets: ['es2015']})
+    .transform(globify)
+    .bundle()
+    .pipe(source('bundle.js'))
+    .pipe(gulp.dest('./'));
+});
+
+```
 
 ##### Via Webpack
 Without any external packages, you can get access to your files like so:
