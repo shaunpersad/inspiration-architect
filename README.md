@@ -235,7 +235,7 @@ module.exports = {
 };
 ```
 
-The contents of these three files will then be merged into a single object that looks like:
+The contents of these three files will then be automatically merged into a single object at runtime that looks like:
 ```
 {
     a_sample: 'one',
@@ -384,7 +384,7 @@ so you must provide it with a way to do so as part of your build process.
 
 ##### Via Browserify
 Here's an example of how to do so via Browserify + 
-[react-globify](https://github.com/capaj/require-globify). Compare the Express.js example's `start.js` file to this:
+[require-globify](https://github.com/capaj/require-globify). Compare the Express.js example's `start.js` file to this:
 ```
 var inspirationArchitectFactory = require('inspiration-architect');
 
