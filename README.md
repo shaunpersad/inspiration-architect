@@ -419,7 +419,7 @@ gulp.task('browserify', function() {
         debug: true,
         standalone: 'browserify'
     })
-    .transform(babelify, {presets: ['es2015']})
+    .transform(babelify, {presets: ['es2015']}) // npm install --save-dev babel-preset-es2015
     .transform(globify)
     .bundle()
     .pipe(source('bundle.js'))
