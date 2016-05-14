@@ -154,10 +154,11 @@ module.exports = function(app, done) {
 var inspirationArchitectFactory = require('inspiration-architect');
 var express = require('express');
 var app = express();
+var path = require('path');
 
 var factory_config = {
-    config_files: './config',
-    provider_files: './providers'
+    config_files: path.join(__dirname, 'config'),
+    provider_files: path.join(__dirname, 'providers')
 };
 
 var InspirationArchitect = inspirationArchitectFactory(factory_config);
@@ -322,12 +323,14 @@ The factory function takes a `factory_config` plain JavaScript object with the f
 You may override any of these values with an object of your own.  Usually you'll want to override `config_files` and `provider_files`.
 Here's a description of each key:
 
-* `config_files`: can be either a string to a directory where your config files are stored, or an object whose keys map to various objects.
+* `config_files`: can be either a string of the absolute path to a directory where your config files are stored, or an object whose keys map to various objects.
 * `config_files_use_ext`: the extension that your config files use.
 * `app_config_path`: the path that will be used on the `app` object to create a function that will allow you to access the config values.
 * `config_env_filename`: the filename of the environment config file.
 * `config_app_filename`: the filename of the main app config file.
 * `config_providers_path` the path in the merged config object that will be used to access the list of providers
+* `provider_files`: can be either a string of the absolute path to a directory where your provider files are stored, or an object whose keys map to various provider functions.
+
 
 
 You can then get the `InspirationArchitect` class by calling the factory function:
