@@ -40,7 +40,7 @@ through a series of functions (called providers) to operate on the `app`, or sim
 
 What goes in a provider function? Anything that can logically be separated out.  
 For example, you could have a provider that sets up a database connection:
-```
+```js
 var mongoose = require('mongoose');
 
 module.exports = function mongoProvider(app, done) {
@@ -64,7 +64,7 @@ module.exports = function mongoProvider(app, done) {
 };
 ```
 And one that sets up caching:
-```
+```js
 var redis = require('redis');
 
 module.exports = function redisProvider(app, done) {
@@ -106,7 +106,7 @@ project/
     start.js
 ```
 ##### project/config/app.js:
-```
+```js
 module.exports = {
     controller_directory: __dirname+'/../controllers/',
     port: 1337,
@@ -117,7 +117,7 @@ module.exports = {
 };
 ```
 ##### project/controllers/IndexController.js
-```
+```js
 module.exports = {
     getIndex: function(req, res) {
         res.send('hello world.');
@@ -125,7 +125,7 @@ module.exports = {
 };
 ```
 ##### project/providers/controllersProvider.js
-```
+```js
 module.exports = function(app, done) {
 
     var controller_directory = app.config('controller_directory');
@@ -141,7 +141,7 @@ module.exports = function(app, done) {
 };
 ```
 ##### project/providers/routesProvider.js
-```
+```js
 module.exports = function(app, done) {
 
     app.get('/', app.getControllerMethod('IndexController', 'getIndex'));
@@ -150,7 +150,7 @@ module.exports = function(app, done) {
 };
 ```
 ##### project/start.js
-```
+```js
 var inspirationArchitectFactory = require('inspiration-architect');
 var express = require('express');
 var app = express();
@@ -206,7 +206,7 @@ Other config files added to this directory should likewise export a plain JavaSc
 Config values can be overwritten using a `.gitignore`'d ".env.js" environment file.
 
 For example, let's say you have an "app.js":
-```
+```js
 module.exports = {
     a_sample: 1,
     b_sample: 'two',
@@ -223,21 +223,21 @@ module.exports = {
 };
 ```
 And another file called "external.js":
-```
+```js
 module.exports = {
     h_sample: 'hello',
     i_sample: 'goodbye'
 };
 ```
 And an ".env.js" file:
-```
+```js
 module.exports = {
     a_sample: 'one'
 };
 ```
 
 The contents of these three files will then be automatically merged into a single object at runtime that looks like:
-```
+```js
 {
     a_sample: 'one',
     b_sample: 'two',
@@ -258,11 +258,11 @@ The contents of these three files will then be automatically merged into a singl
 }
 ```
 You can then access these values via `app.config(path[, default_value])`, using lodash's path syntax e.g.
-```
+```js
 var g_sample = app.config('e_sample.f_sample.g_sample');
 ```
 You may also supply a default value when accessing, in case the value is not available:
-```
+```js
 var j_sample = app.config('j_sample', 6);
 ```
 The path used to append the config function to the `app` object can be set in the factory config, by providing your own `app_config_path` key (the default is "config"),
@@ -275,7 +275,7 @@ Your application should have a directory to store its provider functions.
 In the above example, this corresponds to `project/providers/`;
 
 Each file in that directory should export a function that looks like:
-```
+```js
 module.exports = function(app, done) {
     // do some stuff.
     done();
@@ -289,7 +289,7 @@ By default, the config key is set to `providers`, but that can be changed by pro
 For example, in your providers directory, lets say you had files called "someProvider.js", "someOtherProvider.js", and "yourProvider.js",
 and each file exported a function as described above.  You can then specify the order of execution of these functions in the config.
 e.g. in your "app.js" config file:
-```
+```js
 module.exports = {
     providers: [
         'someOtherProvider',
@@ -309,7 +309,7 @@ In this file, you should set up your initial `app` object (if there is one), and
 
 ##### 4. provide the necessary arguments for the factory function to provide you with an `InspirationArchitect` class.
 The factory function takes a `factory_config` plain JavaScript object with the following default values:
-```
+```js
 {
     config_files: {},
     config_files_use_ext: '.js',
@@ -334,7 +334,7 @@ Here's a description of each key:
 
 
 You can then get the `InspirationArchitect` class by calling the factory function:
-```
+```js
 var InspirationArchitect = inspirationArchitectFactory(factory_config);
 ```
 
@@ -342,7 +342,7 @@ var InspirationArchitect = inspirationArchitectFactory(factory_config);
 Once you have an `InspirationArchitect` class, you can create an instance of it by supplying some optional initial values.
 
 The default initial values are as follows:
-```
+```js
 {
     app: {},
     config: {},
@@ -358,7 +358,7 @@ Here's a description of each key:
 
 
 You can then get an instance by calling `new`:
-```
+```js
 var architect = new InspirationArchitect(initial);
 ```
 
@@ -367,7 +367,7 @@ Once you have an instance of `InspirationArchitect`, you are ready to call `init
 which will load the configs, then iterate through and execute the providers.
 Once the final provider has called its `done` method, or an error is passed to a provider's `done` method, the `callback` will be triggered.
 The `callback` is of signature `function(err, app){}`.
-```
+```js
 architect.init(function(err, app) {
 
     if (err) {
@@ -388,7 +388,7 @@ so you must provide it with a way to do so as part of your build process.
 ##### Via Browserify
 Here's an example of how to do so via Browserify + 
 [require-globify](https://github.com/capaj/require-globify). Compare the Express.js example's `start.js` file to this:
-```
+```js
 var inspirationArchitectFactory = require('inspiration-architect');
 
 var config_files = require('./config/*.js', {mode: 'hash', options: {dot: true}});
@@ -408,7 +408,7 @@ architect.init(function(err, app) {
 });
 ```
 You'd then point Browserify to this entry point file to generate your bundle file to include in your script tag:
-```
+```js
 var gulp = require('gulp');
 var browserify = require('browserify');
 var babelify = require('babelify');
@@ -433,7 +433,7 @@ gulp.task('browserify', function() {
 
 ##### Via Webpack
 Without any external packages, you can get access to your files like so:
-```
+```js
 var inspirationArchitectFactory = require('../inspiration-architect.min');
 
 function requireAll(r) {
